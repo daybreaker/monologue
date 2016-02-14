@@ -1,53 +1,42 @@
 class Monologue::Admin::PostsController < Monologue::Admin::BaseController
   respond_to :html
-  cache_sweeper Monologue::PostsSweeper, :only => [:create, :update, :destroy]
-  before_filter :load_post_and_revisions, :only => [:edit, :update]
-
+  before_filter :load_post, only: [:edit, :update]
+  
   def index
-    @posts = Monologue::Post.default
+    @page = params[:page].nil? ? 1 : params[:page]
+    @posts = Monologue::Post.listing_page(@page).includes(:user)
   end
 
   def new
     @post = Monologue::Post.new
-    @revision = @post.posts_revisions.build
+  end
+
+  ## Preview a post without saving.
+  def preview
+    # mockup our models for preview.
+    @post = Monologue::Post.new post_params
+    @post.user_id = monologue_current_user.id
+    @post.published_at = Time.zone.now
+    # render it exactly as it would display when live.
+    render "/monologue/posts/show", layout: Monologue::Config.layout || "/layouts/monologue/application"
   end
 
   def create
-    params[:post][:posts_revisions_attributes] = {}
-    params[:post][:posts_revisions_attributes][0] = params[:post][:posts_revision]
-    params[:post].delete("posts_revision")
-    @post = Monologue::Post.new(params[:post])
-    @revision = @post.posts_revisions.first
-    @revision.user_id = current_user.id
-    save_tags()
+    @post = Monologue::Post.new post_params
+    @post.user_id = monologue_current_user.id
     if @post.save
-      if @revision.published_at > DateTime.now && @post.published && ActionController::Base.perform_caching
-        flash[:warning] = I18n.t("monologue.admin.posts.create.created_with_future_date_and_cache")
-      else
-        flash[:notice] =  I18n.t("monologue.admin.posts.create.created")
-      end
-      redirect_to edit_admin_post_path(@post)
+      prepare_flash_and_redirect_to_edit()
     else
       render :new
     end
   end
 
   def edit
-    @revision = @post.active_revision
   end
 
   def update
-    @post.published = params[:post][:published]
-    @revision = @post.posts_revisions.build(params[:post][:posts_revision])
-    @revision.user_id = current_user.id
-    save_tags()
-    if @post.save
-      if @revision.published_at > DateTime.now && @post.published && ActionController::Base.perform_caching
-        flash[:warning] =  I18n.t("monologue.admin.posts.update.saved_with_future_date_and_cache")
-      else
-        flash[:notice] =  I18n.t("monologue.admin.posts.update.saved")
-      end
-      redirect_to edit_admin_post_path(@post)
+    if @post.update(post_params)
+      prepare_flash_and_redirect_to_edit()
     else
       render :edit
     end
@@ -56,25 +45,27 @@ class Monologue::Admin::PostsController < Monologue::Admin::BaseController
   def destroy
     post = Monologue::Post.find(params[:id])
     if post.destroy
-      redirect_to admin_posts_path, :notice =>  I18n.t("monologue.admin.posts.delete.removed")
+      redirect_to admin_posts_path, notice:  I18n.t("monologue.admin.posts.delete.removed")
     else
-      redirect_to admin_posts_path, :alert => I18n.t("monologue.admin.posts.delete.failed")
+      redirect_to admin_posts_path, alert: I18n.t("monologue.admin.posts.delete.failed")
     end
   end
 
-  private
-  def save_tags
-    @post.tag!(params[:post][:tag_list].split(","))
+private
+  def load_post
+    @post = Monologue::Post.find(params[:id])
   end
 
-  def load_post_and_revisions
-    @post = Monologue::Post.includes(:posts_revisions).find(params[:id])
+  def prepare_flash_and_redirect_to_edit
+    if @post.published_in_future? && ActionController::Base.perform_caching
+      flash[:warning] = I18n.t("monologue.admin.posts.#{params[:action]}.saved_with_future_date_and_cache")
+    else
+      flash[:notice] =  I18n.t("monologue.admin.posts.#{params[:action]}.saved")
+    end
+    redirect_to edit_admin_post_path(@post)
   end
 
-  helper_method :tag_list_for
-
-  def tag_list_for(tags)
-    tags.map { |tag| tag.name }.join(", ") if tags
+  def post_params
+    params.require(:post).permit(:published, :tag_list,:title,:content,:url,:published_at)
   end
-
 end

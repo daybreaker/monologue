@@ -10,28 +10,34 @@ describe "posts" do
       visit admin_posts_path
       page.should have_content "Add a monologue"
     end
+
+    it "can access post's admin with pagination" do
+      Factory(:post, title: "my first title")
+      Factory(:post, title: "my second title")
+      Monologue::Config.admin_posts_per_page = 1
+      visit admin_posts_page_path page: 1
+      page.should have_content "Older Posts"
+    end
     
     it "can create new post" do
       visit new_admin_post_path
       page.should have_content "New monologue"
-      fill_in "Title", :with =>  "my title"
-      fill_in "Content", :with =>  "C'est l'histoire d'un gars comprends tu...and finally it has some french accents àèùöûç...meh!"
-      fill_in "Published at", :with =>  DateTime.now
+      fill_in "Title", with:  "my title"
+      fill_in "Content", with:  "C'est l'histoire d'un gars comprends tu...and finally it has some french accents àèùöûç...meh!"
+      fill_in "Published at", with:  DateTime.now
       click_button "Save"
       page.should have_content "Monologue created"
     end
 
-    it "can edit a post and adds a revision when doing" do
-      Factory(:posts_revision, :title => "my title")
+    it "can edit a post and then save the post" do
+      Factory(:post, title: "my title")
       visit admin_posts_path
       click_on "my title"
       page.should have_content "Edit \""
-      fill_in "Title", :with =>  "This is a new title"
-      fill_in "Content", :with =>  "New content here..."
-      fill_in "Published at", :with =>  DateTime.now
-      nbr_posts_revisions = Monologue::PostsRevision.all.count
+      fill_in "Title", with:  "This is a new title"
+      fill_in "Content", with:  "New content here..."
+      fill_in "Published at", with:  DateTime.now
       click_button "Save"
-      (nbr_posts_revisions + 1).should equal(Monologue::PostsRevision.all.count)
       page.should have_content "Monologue saved"
     end
     
@@ -46,21 +52,21 @@ describe "posts" do
 
     it "can create a new post with tags removing the empty spaces" do
       visit new_admin_post_path
-      fill_in "Title", :with =>  "title"
-      fill_in "Content", :with =>  "content"
-      fill_in "Published at", :with =>  DateTime.now
-      fill_in "Tags",:with => "  rails, ruby,    one great tag"
+      fill_in "Title", with:  "title"
+      fill_in "Content", with:  "content"
+      fill_in "Published at", with:  DateTime.now
+      fill_in "Tags",with: "  rails, ruby,    one great tag"
       click_button "Save"
-      page.should have_field :tag_list ,:with => "rails, ruby, one great tag"
+      page.should have_field :tag_list ,with: "rails, ruby, one great tag"
     end
 
     it "can update the tags of an edited post" do
-      Factory(:posts_revision, :title => "my title")
+      Factory(:post, title: "my title")
       visit admin_posts_path
       click_on "my title"
-      fill_in "Tags",:with => "ruby, spree"
+      fill_in "Tags",with: "ruby, spree"
       click_button "Save"
-      page.should have_field :tag_list ,:with => "ruby, spree"
+      page.should have_field :tag_list ,with: "ruby, spree"
     end
   end
   
@@ -77,8 +83,7 @@ describe "posts" do
     
     it "can NOT edit posts" do
       post = Factory(:post)
-      pr = Factory(:posts_revision, :post_id => post.id)
-      visit edit_admin_post_path(pr)
+      visit edit_admin_post_path(post)
       page.should have_content "You must first log in"
     end
   end  

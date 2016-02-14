@@ -1,25 +1,26 @@
 class Monologue::PostsController < Monologue::ApplicationController
-  caches_page :index, :show, :feed , :if => Proc.new { current_user.nil? }
-
   def index
     @page = params[:page].nil? ? 1 : params[:page]
-    @posts = Monologue::Post.published.page(@page)
+    @posts = Monologue::Post.page(@page).includes(:user).published
   end
-  
+
   def show
-    if current_user
-      post = Monologue::Post.default.where("monologue_posts_revisions.url = :url", {:url => params[:post_url]}).first
+    if monologue_current_user
+      @post = Monologue::Post.default.where("url = :url", {url: params[:post_url]}).first
     else
-      post = Monologue::Post.published.where("monologue_posts_revisions.url = :url", {:url => params[:post_url]}).first
+      @post = Monologue::Post.published.where("url = :url", {url: params[:post_url]}).first
     end
-    if post.nil?
+    if @post.nil?
       not_found
-      return
     end
-    @revision = post.active_revision
   end
-  
+
   def feed
     @posts = Monologue::Post.published.limit(25)
+    if params[:tags].present?
+      tags = Monologue::Tag.where(name: params[:tags].split(",")).pluck(:id)
+      @posts = @posts.joins(:taggings).where("monologue_taggings.tag_id in (?)", tags)
+    end
+    render 'feed', layout: false
   end
 end

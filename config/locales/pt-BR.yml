@@ -1,0 +1,136 @@
+pt-BR:
+  monologue:
+    posts:
+      pagination:
+        older_posts: "Posts antigos"
+        newer_posts: "Posts recentes"
+      social_sharing:
+        tagline: "Gostou do que você leu? Compartilhe!"
+      post:
+        readmore: "Leia mais"
+      "404":
+        title: "A página que você procura não existe.."
+        message: "Você deve teve ter escrito outro endereço ou esta página pode ter sido movida."
+    sidebar:
+      categories:
+        title: "Categorias"
+      latest_posts:
+        title: "Posts recentes"
+      latest_tweets:
+        title: "Tweets recentes"
+      tag_cloud:
+        title: "Tags"
+    tags:
+      show:
+        showing_post_with_tag: "Mostrando posts com tag"
+        show_all_posts: "Mostrar todos posts"
+    admin:
+      login:
+        need_auth: "É necessário estar logado"
+      users:
+        form:
+          email: "Email"
+          name: "Nome"
+          password: "Senha"
+          password_confirmation: "Confirmação de senha"
+        edit:
+          header: "Editar configurações de usuário"
+          save: "Salvar"
+        new:
+          create: "TODO Create"
+          header: "TODO Add a user"
+        create:
+          success: "TODO User created"
+        delete:
+          removed: "TODO User '%{user}' removed successfully"
+          failed: "TODO Could not remove user '%{user}'"
+        index:
+          email: "Email"
+          name: "Nome"
+          edit: "Editar"
+          delete: "Deletar"
+          create: "TODO Create"
+      posts:
+        index:
+          title: "Título"
+          edit: "Editar"
+          delete: "Deletar"
+          published: "Sim"
+          not_published: "Não publicado"
+          status: "Publicado?"
+          author: "Autor"
+        new:
+          header: "Novo blog post"
+        create:
+          saved: "Post criado com sucesso"
+          saved_with_future_date_and_cache: "Post criado com sucesso: posts com data de publicação no futuro não irão ser mostrados a menos que a cache seja limpa naquele mesmo dia. A cache provavelmente será gerada antes disso e não será atualizada automaticamente."
+        edit:
+          header: "Editar"
+        update:
+          saved_with_future_date_and_cache: "Post salvo com sucesso: posts com data de publicação no futuro não irão ser mostrados a menos que a cache seja limpa naquele mesmo dia. A cache provavelmente será gerada antes disso e não será atualizada automaticamente."
+          saved: "Post salvo com sucesso"
+        delete:
+          removed: "Post removido com sucesso"
+          fail: "Falha na remoção do post!"
+        form:
+          title: "Título"
+          content: "Conteúdo"
+          url:
+            caption: "URL<br/><i> Esse campo será preenchido automaticamente com '%{default_url}'. Você pode escolher a sua própria URL. Não adicione '%{root}' no início da sua URL.</i>"
+            generated_title: "seu-titulo-de-post"
+          published_at: "Data de publicação"
+          published: "Publicado"
+          save: "Salvar"
+          preview: "Visualizar"
+          close: "Fechar"
+          tags: "Tags"
+      comments:
+        show:
+          recent_comments: "Comentários recentes"
+      sessions:
+        new:
+          title: "Tela administrativa do blog"
+          email: "Email"
+          password: "Senha"
+          button: "Entrar"
+        messages:
+          invalid: "Email ou senha inválidos"
+          logged_in: "Login efetuado com sucesso!"
+          logged_out: "Logout efetuado com sucesso!"
+  layouts:
+    monologue:
+      admin:
+        nav_bar:
+          add_a_monologue: "Criar post"
+          list_monologues: "Listar posts"
+          comments: "Comentários"
+          cache: "Gerenciar cache"
+          edit_user_info: "Minha conta"
+          settings: "Configurações"
+          log_out: "Sair"
+          users: "TODO Users"
+  activerecord:
+    attributes:
+      monologue/user:
+        password_digest: "TODO Password confirmation"
+    errors:
+      format: "%{message}"
+    errors:
+      full_messages: "%{message}"
+    errors:
+      models:
+        full_messages: "%{message}"
+        monologue/post:
+          blank: "%{attribute} é obrigatório"
+          taken: "%{attribute} já utilizada por outro post"
+          attributes:
+            published_at:
+              blank: "'Data de publicação' é obrigatório"
+            url:
+              start_with_slash: "URL não pode começar com '/'"
+        monologue/user:
+          blank: "%{attribute} é obrigatório"
+          taken: "TODO %{attribute} has already been taken"
+          attributes:
+            password:
+              confirmation: "Senha e confirmação diferem."

@@ -9,5 +9,9 @@
 //= require monologue/bootstrap/bootstrap.min
 //= require monologue/bootstrap/bootstrap-datepicker
 //= require monologue/bootstrap/bootstrap-datepicker-fr
-//= require tinymce-jquery
-//= require_tree .
+//= require monologue/bootstrap/bootstrap-datepicker-pt
+//= require monologue/bootstrap/bootstrap-datepicker-es
+//= require ckeditor/init
+//= require monologue/admin/ckeditor-config
+//= require monologue/admin/posts
+//= require select2

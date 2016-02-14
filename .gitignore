@@ -5,7 +5,9 @@ spec/dummy/db/*.sqlite3
 spec/dummy/log/*.log
 spec/dummy/tmp/
 
-.rvmrc
+.sass-cache/
+coverage/
+
 .DS_Store
 .dropbox
 
@@ -13,3 +15,9 @@ spec/dummy/tmp/
 .idea/**/*
 
 Gemfile.lock
+*.lock
+
+.ruby-version
+.rbenv-version
+.rvmrc
+

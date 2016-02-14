@@ -1,17 +1,12 @@
-<% revision = post.active_revision %>
-<section>
-  <header>
-    <h1><%= link_to revision.title, revision.full_url %></h1>
-    <time datetime="<%= revision.published_at %>">
-      <%= revision.published_at.to_date.to_formatted_s(:long_ordinal) %>
-    </time>
-    &nbsp;&nbsp;|&nbsp;&nbsp;<%= revision.user.name %>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="<%= revision.full_url + "#disqus_thread" %>"></a>
-  </header>
+<section data-tags="<%= post.tags.map(&:name).join(' ') %>">
+  <%= render partial: 'monologue/posts/post_header', locals: {post: post} %>
 
-  <p><%= raw truncate(strip_tags(revision.content), :length => 1000) %></p>
+  <div class="content" data-monologue="content">
+    <%= truncate_html(post.content, length: Monologue::Config.preview_size, omission: '...') %>
+  </div>
 
-  <div id='tags'>
+  <div class="tags" data-monologue="tags">
     <%= render post.tags %>
   </div>
-  <%= link_to t(".readmore"), revision.full_url, :class => "btn alignleft" %>
+  <%= link_to t(".readmore"), post.full_url, class: "button" %>
 </section>

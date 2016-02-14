@@ -2,11 +2,18 @@
 ENV["RAILS_ENV"] ||= 'test'
 require File.expand_path("../dummy/config/environment", __FILE__)
 require 'rspec/rails'
-require 'capybara/rspec'
 require 'rspec/autorun'
+
+require 'capybara/rspec'
+require 'capybara/rails'
+require 'capybara-webkit'
+
 require "factory_girl_rails"
 require 'database_cleaner'
 require 'shoulda'
+
+require 'coveralls'
+Coveralls.wear!
 
 
 ENGINE_RAILS_ROOT=File.join(File.dirname(__FILE__), '../')
@@ -40,7 +47,7 @@ RSpec.configure do |config|
   # automatically. This will be the default behavior in future versions of
   # rspec-rails.
   config.infer_base_class_for_anonymous_controllers = false
-  
+
   config.before(:suite) do
     DatabaseCleaner.strategy = :deletion
     DatabaseCleaner.clean_with(:deletion)
@@ -48,6 +55,7 @@ RSpec.configure do |config|
 
   config.before(:each) do
     DatabaseCleaner.start
+    ActionController::Base.perform_caching = false
   end
 
   config.after(:each) do
