@@ -30,6 +30,29 @@ module Monologue
              capture(&block)
        end
      end
+     
+     def sidebar_icon_for(title)
+    icon = case title
+    when "Categories"
+      icon('folder-open')
+    when "Latest posts"
+      icon('thumb-tack')
+    when "Latest tweets"
+      icon('twitter')
+    when "Tags"
+      icon('tags')
+    end
+    content_tag :h1 do
+      icon + content_tag(:span, title)
+    end
+  end
+
+  def sidebar_section_for(title, &block)
+    content_tag(:section, class: 'widget') do
+      content_tag(:header, sidebar_icon_for(title)) +
+        capture(&block)
+    end
+  end
 
   end
 end
