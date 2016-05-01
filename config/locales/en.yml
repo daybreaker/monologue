@@ -84,6 +84,7 @@ en:
           preview: "Preview"
           close: "Close"
           tags: "Tags"
+          title_image: "Background Image"
       comments:
         show:
           recent_comments: "Recent comments"

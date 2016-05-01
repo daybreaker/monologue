@@ -1,7 +1,7 @@
 class Monologue::Admin::PostsController < Monologue::Admin::BaseController
   respond_to :html
   before_filter :load_post, only: [:edit, :update]
-  
+
   def index
     @page = params[:page].nil? ? 1 : params[:page]
     @posts = Monologue::Post.listing_page(@page).includes(:user)
@@ -66,6 +66,6 @@ private
   end
 
   def post_params
-    params.require(:post).permit(:published, :tag_list,:title,:content,:url,:published_at)
+    params.require(:post).permit(:published, :tag_list, :title, :content, :url, :published_at, :title_image)
   end
 end
