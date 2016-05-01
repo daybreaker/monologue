@@ -1,7 +1,6 @@
-@import 'monologue/blog/skeleton/base';
-@import 'monologue/blog/skeleton/skeleton';
-@import 'monologue/blog/skeleton/layout';
-@import 'monologue/foundation_icons/social_foundicons';
-@import 'monologue/blog/monologue';
-@import 'monologue/blog/fonts';
-@import 'monologue/blog/custom';
+@import 'monologue/bootstrap/bootstrap.min';
+@import 'monologue/bootstrap/bootstrap-responsive.min';
+@import 'monologue/bootstrap/bootstrap-datepicker';
+@import 'select2';
+@import 'monologue/admin/posts';
+
